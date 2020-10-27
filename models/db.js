@@ -1,6 +1,6 @@
 'use strict';
 
-var config = require('../config/config.default');
+var config = require('../config');
 var Sequelize = require('sequelize');
 
 var connect = new Sequelize(

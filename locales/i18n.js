@@ -1,7 +1,7 @@
 'use strict';
 
 var i18n = require('i18n');
-var config = require('../config/config.default');
+var config = require('../config');
 
 i18n.configure({
   locales: ['en-US', 'zh-CN'],

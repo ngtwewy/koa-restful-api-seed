@@ -97,3 +97,4 @@ logs
 app
 bin
 tests
+/config/config.local.js

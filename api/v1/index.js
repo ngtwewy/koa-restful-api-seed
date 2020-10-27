@@ -4,15 +4,14 @@ const auth = require('./auth/routes');
 const home = require('./home/routes');
 const articles = require('./articles/routes');
 
+var config = require('../../config')
+
 const v1 = new Router({
   prefix: '/v1',
 });
 
 v1.get(`/`, (ctx) => {
-  var data = {
-    "document_url": "https://restfulapi.cn/manual",
-    "version": "v1.1.20201018"
-  };
+  var data = config.systemInfo;
   ctx.set("Content-Type", "application/json");
   ctx.body = data;
 });

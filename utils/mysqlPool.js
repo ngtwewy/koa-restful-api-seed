@@ -1,9 +1,9 @@
 /*
-mysql pool
+ * mysql pool
  */
 
 var mysql = require('mysql2');
-var config = require("../config/config.default.js");
+var config = require("../config");
 
 let pool = mysql.createPool({
   user: config.database.username,

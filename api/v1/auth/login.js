@@ -5,7 +5,7 @@ var Parameter = require('parameter');
 var tools = require('../../../utils/tools');
 var userModel = require('../../../models/user');
 
-var config = require("../../../config/config.default");
+var config = require("../../../config");
 
 
 /**

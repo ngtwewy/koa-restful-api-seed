@@ -12,5 +12,9 @@
   "delete_success": "删除成功",
   "delete_failed": "删除失败",
   "category_delete_failed": "请删除分类下面的子分类或文章",
-  "parent_id_can_not_be_its_own_id": "不能设置自己为父分类"
+  "parent_id_can_not_be_its_own_id": "不能设置自己为父分类",
+  "mail_sending_failed":"邮件发送失败",
+  "sms_sending_failed":"短信发送失败",
+  "mail_sending_success":"邮件发送成功",
+  "sms_sending_success":"短信发送成功"
 }
