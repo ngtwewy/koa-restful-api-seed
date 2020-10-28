@@ -97,4 +97,6 @@ logs
 app
 bin
 tests
-/config/config.local.js
+config/config.development.js
+config/config.production.js
+
