@@ -3,6 +3,7 @@
  * @link https://restfulapi.cn
  */
 
+var Sequelize = require('sequelize');
 var Parameter = require('parameter');
 var i18n = require('i18n');
 
@@ -33,6 +34,24 @@ exports.sendCode = async (ctx) => {
   code = code.substr(2, length);
 
   // 除防轰炸外，还应该限制一个IP每天发送短信的总数
+  const Op = Sequelize.Op;
+  var counter = await verificationCode.findAll({
+    where: {
+      [Op.and]: [
+        { ip: ctx.ip },
+        {
+          create_time: {
+            [Op.gt]: Math.floor(Date.now() / 1000) - 60 * 60 * 12
+          }
+        }
+      ]
+    }
+  });
+  if (counter.length >= config.verificationCode.rateLimit) {
+    ctx.status = 429;
+    ctx.body = { error: i18n.__('exceeding_the_speed_limit') }
+    return;
+  }
 
   // 发送验证码
   if (config.verificationCode.isTest != true) {
