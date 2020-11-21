@@ -9,7 +9,8 @@ const router = new Router({
 
 router.post(`/login`, loginService.login);
 router.post('/signup', loginService.signup);
-router.post('/sendcode', smsService.sendCode);
+router.post('/send-code', smsService.sendCode);
+router.post('/check-code', smsService.checkCode);
 
 module.exports = router;
 

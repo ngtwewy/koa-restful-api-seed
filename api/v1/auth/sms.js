@@ -11,6 +11,22 @@ var config = require("../../../config");
 var verificationCode = require("../../../models/verificationCode");
 var smsService = require("./sms.service");
 
+
+/**
+ * 
+ * @api {post} /send-code 验证码发送
+ * @apiName 验证码发送
+ * @apiGroup 权限相关
+ * @apiVersion  3.1.1
+ * 
+ * @apiParam  {String} mobile 必填，手机号码
+ * @apiParam  {String} length 选填，默认为验证码长度
+ * 
+ * @apiSuccess (200) {type} name description
+ * 
+ * 
+ * 
+ */
 exports.sendCode = async (ctx) => {
   // 验证参数
   var validator = new Parameter();
@@ -87,3 +103,18 @@ exports.sendCode = async (ctx) => {
   }
 }
 
+
+
+/**
+ * 
+ * @api {post} /check-code 验证码检查
+ * @apiName 验证码检查
+ * @apiGroup 权限相关
+ * @apiVersion  3.0.0
+ * @apiDescription 用于前端提前检查验证码是否正确
+ * 
+ * @apiParam  {String} code 需要检查的验证码
+ */
+exports.checkCode = async (ctx) => {
+
+}

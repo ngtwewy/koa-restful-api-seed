@@ -56,8 +56,8 @@ const { v1 } = require('./api');
 app.use(v1.routes());
 
 // app 前端 routes
-// const appRouter = require('./app/controllers');
-// app.use(appRouter.routes());
+const appRouter = require('./app/controllers');
+app.use(appRouter.routes());
 
 // i18n 国际化
 require('./locales/i18n')(app);

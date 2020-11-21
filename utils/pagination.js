@@ -92,7 +92,7 @@ exports.paginate = function (req, page, total, page_size = 10, botNum = 4) {
   arg.pageNum = Math.ceil(total / page_size);
   arg.bothNum = botNum;
 
-  var str = '<ul class="pagination pagination-sm">';
+  var str = '<ul class="pagination pagination-sm nav">';
   str += prev();
   str += pageList();
   str += next();

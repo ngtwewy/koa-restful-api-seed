@@ -14,6 +14,20 @@ var pagination = require('../../../utils/pagination');
  * @param {*} next 
  * 
  */
+/**
+ * 
+ * @api {get} /article 文章列表
+ * @apiName 文章列表
+ * @apiGroup 文章相关接口
+ * @apiVersion  3.1.0
+ * 
+ * 
+ * @apiParam  {String} page 选填，页码
+ * @apiParam  {String} perPage 选填，每页显示条数，默认 30条/页
+ * @apiParam  {String} categoryId 选填，文章分类
+ * @apiParam  {String} sortby 选填，排序字段
+ * @apiParam  {String} order 选填，排序方式，默认 desc
+ */
 exports.list = async (ctx, next) => {
   var data = {};
 
