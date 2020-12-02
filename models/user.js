@@ -21,11 +21,10 @@ var User = db.define('tb_user',
     more: Sequelize.TEXT,
     address: Sequelize.STRING(255),
     type: Sequelize.INTEGER,
-    create_time: Sequelize.BIGINT(11),
-    login_time: Sequelize.BIGINT(11),
-    update_time: Sequelize.BIGINT(11),
-    is_black: Sequelize.INTEGER,
-    is_active: Sequelize.INTEGER
+    created_at: Sequelize.BIGINT(11),
+    logined_at: Sequelize.BIGINT(11),
+    updated_at: Sequelize.BIGINT(11),
+    status: Sequelize.INTEGER
   },
   { freezeTableName: true, timestamps: false }
 );

@@ -11,7 +11,7 @@ var Category = db.define('tb_article_category',
     description: Sequelize.TEXT,
     thumbnail: Sequelize.STRING(255),
     list_order: Sequelize.BIGINT(11),
-    create_time: Sequelize.BIGINT(11),
+    created_at: Sequelize.BIGINT(11),
     is_show: Sequelize.BIGINT(11)
   },
   { freezeTableName: true, timestamps: false }

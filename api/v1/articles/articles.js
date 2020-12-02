@@ -52,7 +52,7 @@ exports.list = async (ctx, next) => {
     ON a.category_id = c.id                     \
   ";
 
-  sql += " WHERE a.delete_time = 0";
+  sql += " WHERE a.deleted_at = 0";
 
   // 分类
   if (categoryId != 0) {
@@ -78,7 +78,7 @@ exports.list = async (ctx, next) => {
       break;
     case "list_order": sortby = "list_order";
       break;
-    case "create_time": sortby = "create_time";
+    case "created_at": sortby = "created_at";
       break;
     default: sortby = "id";
   }
@@ -102,10 +102,10 @@ exports.list = async (ctx, next) => {
 
   var articles = await db.query(sql, { type: db.QueryTypes.SELECT, replacements: replacements });
   articles.forEach(function (item, index, array) {
-    let time = item.create_time * 1000;
+    let time = item.created_at * 1000;
     articles[index]['avatar'] = tools.getImageUrl(item['avatar']);
     articles[index]['thumbnail'] = tools.getImageUrl(item['thumbnail']);
-    articles[index]['create_time'] = tools.formatDate(time);
+    articles[index]['created_at'] = tools.formatDate(time);
   });
 
   // 获取分页

@@ -97,7 +97,7 @@ exports.signup = (ctx) => {
     mobile: ctx.request.body.mobile,
     nickname: "",
     password: ctx.request.body.password ? ctx.request.body.password : "",
-    create_time: parseInt(Date.now() / 1000),
+    created_at: parseInt(Date.now() / 1000),
     create_tim2: Date.now()
   };
   // 检查验证码是否正确

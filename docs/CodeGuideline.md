@@ -18,7 +18,7 @@ GET         /articles/:id          articles.show      # 查看详情
 
 
 
-3 不符合 CRUD 情况的RESTful API
+## 3 不符合 CRUD 情况的RESTful API
 在实际资源操作中，总会有一些不符合 CRUD（Create-Read-Update-Delete） 的情况，一般有几种处理方法。
 1、使用 POST，为需要的动作增加一个 endpoint，使用 POST 来执行动作，比如: POST /resend 重新发送邮件。
 2、增加控制参数，添加动作相关的参数，通过修改参数来控制动作。比如一个博客网站，会有把写好的文章“发布”的功能，可以用上面的 POST /articles/{:id}/publish 方法，也可以在文章中增加 published:boolean 字段，发布的时候就是更新该字段 PUT /articles/{:id}?published=true
@@ -29,30 +29,30 @@ GET         /articles/:id          articles.show      # 查看详情
 
 
 
-4 前后端不分离
+## 4 前后端不分离
 如果是前后端不分离，比RESTful API 增加了 “打开添加页面” 和 “打开编辑页面”。
 方法         路由                   控制器或服务         含义
 GET         /articles              articles.index     # 查看文章列表
-GET         /articles/new          articles.new       # 打开添加页面 ***
-POST        /articles              articles.create    # 添加保存
+GET         /articles/create       articles.create    # 打开新建页面 ***
+POST        /articles              articles.store     # 新建保存
 GET         /articles/:id/edit     articles.edit      # 打开编辑页面 ***
-PUT         /articles/:id          articles.update    # 编辑保存
+GET         /articles/:id          articles.show      # 查看一个
+PUT/PATCH   /articles/:id          articles.update    # 编辑保存
 DELETE      /articles/:id          articles.destroy   # 删除一个
-GET         /articles/:id          articles.show      # 查看详情
 
 如果我们不需要其中的某几个方法，可以不用在 articles.js 里面实现。
 
 
 
-5 前后端不分离不符合 CRUD 的情况
+## 5 前后端不分离不符合 CRUD 的情况
 5.1 比如登录的情况 页面地址是 GET /login，POST 表单地址是 POST /login，好像就不太合适。github.com 的方法是 post /session。
-5.2 如果 post 的路径不太好确定，就统一使用 get /login 作为获取操作的页面。使用 POST /loginaction 作为表单链接。
+5.2 如果 post 的路径不太好确定，就统一使用 get /login 作为获取操作的页面。使用 POST /login-action 作为表单链接。
 
 
 
-6，RESTful API 返回状态码
+## 6，RESTful API 返回状态码
 
-6.1 如果是RESTful API，直接使用 http 的状态码
+### 6.1 如果是RESTful API，直接使用 http 的状态码
 状态码
 1xx 状态码
 API 不需要1xx状态码，下面介绍其他四类状态码的精确含义。
@@ -91,7 +91,7 @@ Location: /api/orders/12345
 
 
 
-7，前后端不分离返回状态码
+## 7，前后端不分离返回状态码
 如果是前端ajax, 统一使用 http 的状态码 200，在 ctx.body 中增加body对象 {success, message, data} 。
 success:true 等于成功，其他等于失败。
 

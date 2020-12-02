@@ -8,7 +8,7 @@ var Parameter = require('parameter');
 var i18n = require('i18n');
 
 var config = require("../../../config");
-var verificationCode = require("../../../models/verificationCode");
+var codeModel = require("../../../models/code");
 var smsService = require("./sms.service");
 
 
@@ -45,32 +45,32 @@ exports.sendCode = async (ctx) => {
   // 生成验证码
   var length = ctx.request.body.length
     ? ctx.request.body.length
-    : config.verificationCode.length;
+    : config.codeModel.length;
   var code = Math.random().toString();
   code = code.substr(2, length);
 
   // 除防轰炸外，还应该限制一个IP每天发送短信的总数
   const Op = Sequelize.Op;
-  var counter = await verificationCode.findAll({
+  var counter = await codeModel.findAll({
     where: {
       [Op.and]: [
         { ip: ctx.ip },
         {
-          create_time: {
+          created_at: {
             [Op.gt]: Math.floor(Date.now() / 1000) - 60 * 60 * 12
           }
         }
       ]
     }
   });
-  if (counter.length >= config.verificationCode.rateLimit) {
+  if (counter.length >= config.codeModel.rateLimit) {
     ctx.status = 429;
     ctx.body = { error: i18n.__('exceeding_the_speed_limit') }
     return;
   }
 
   // 发送验证码
-  if (config.verificationCode.isTest != true) {
+  if (config.codeModel.isTest != true) {
     var res = await smsService.send(ctx.request.body.mobile, code);
     res = JSON.parse(res);
     if (res.code != 0) {
@@ -87,19 +87,19 @@ exports.sendCode = async (ctx) => {
     account: ctx.request.body.mobile,
     is_used: 0,
     ip: ctx.ip,
-    create_time: time,
-    expire_time: time + 60 * 30
+    created_at: time,
+    expired_at: time + 60 * 30
   };
 
   try {
-    await verificationCode.create(data);
+    await codeModel.create(data);
     ctx.body = {
       message: i18n.__('sms_sending_success'),
-      verificationCode: data
+      codeModel: data
     };
   } catch (error) {
     ctx.status = 500;
-    ctx.body = { error: i18n.__('add_failed') };
+    ctx.body = { error: i18n.__('create_failed') };
   }
 }
 

@@ -95,6 +95,7 @@ bin
 logs
 
 app
+applications
 bin
 tests
 config/config.development.js

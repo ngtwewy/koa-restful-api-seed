@@ -30,13 +30,15 @@
 └── server.js        # 服务器文件
 ```
 
-## 生成文档
+## 生成API文档
 
 ```
 cd bin
 apidoc -i ../api/ -o ../static/manual/
 ```
-
+## 代码规范
+- [CodeGuideline](docs/CodeGuideline.md)
+- [MySQLGuideline](docs/MySQLGuideline.md)
 
 ## 版权信息
 - 本软件遵循 Apache Licence 2.0 开源协议发布。

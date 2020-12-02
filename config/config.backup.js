@@ -17,7 +17,8 @@ module.exports = {
     password: 'root',
     database: 'cn_net_javascript',
     port: 3306,
-    connection_limit: 10
+    connection_limit: 10,
+    logging: false
   },
   languange: 'zh-CN',
   siteUrl: 'http://127.0.0.1:3000',
