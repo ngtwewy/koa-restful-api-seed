@@ -10,6 +10,8 @@ var i18n = require('i18n');
 var config = require("../../../config");
 var codeModel = require("../../../models/code");
 var smsService = require("./sms.service");
+const { where } = require('sequelize');
+const code = require('../../../models/code');
 
 
 /**
@@ -20,11 +22,7 @@ var smsService = require("./sms.service");
  * @apiVersion  3.1.1
  * 
  * @apiParam  {String} mobile 必填，手机号码
- * @apiParam  {String} length 选填，默认为验证码长度
- * 
- * @apiSuccess (200) {type} name description
- * 
- * 
+ * @apiParam  {String} length 选填，默认为验证码长度 
  * 
  */
 exports.sendCode = async (ctx) => {
@@ -45,7 +43,7 @@ exports.sendCode = async (ctx) => {
   // 生成验证码
   var length = ctx.request.body.length
     ? ctx.request.body.length
-    : config.codeModel.length;
+    : config.code.length;
   var code = Math.random().toString();
   code = code.substr(2, length);
 
@@ -63,14 +61,14 @@ exports.sendCode = async (ctx) => {
       ]
     }
   });
-  if (counter.length >= config.codeModel.rateLimit) {
+  if (counter.length >= config.code.rateLimit) {
     ctx.status = 429;
     ctx.body = { error: i18n.__('exceeding_the_speed_limit') }
     return;
   }
 
   // 发送验证码
-  if (config.codeModel.isTest != true) {
+  if (config.code.isTest != true) {
     var res = await smsService.send(ctx.request.body.mobile, code);
     res = JSON.parse(res);
     if (res.code != 0) {
@@ -95,7 +93,7 @@ exports.sendCode = async (ctx) => {
     await codeModel.create(data);
     ctx.body = {
       message: i18n.__('sms_sending_success'),
-      codeModel: data
+      code: data
     };
   } catch (error) {
     ctx.status = 500;
@@ -113,8 +111,37 @@ exports.sendCode = async (ctx) => {
  * @apiVersion  3.0.0
  * @apiDescription 用于前端提前检查验证码是否正确
  * 
+ * @apiParam  {String} mobile 接收验证码的手机号
  * @apiParam  {String} code 需要检查的验证码
  */
 exports.checkCode = async (ctx) => {
+  // 验证参数
+  var validator = new Parameter();
+  var rule = {
+    mobile: { type: 'string', min: 11, max: 11 },
+    code: { type: 'string', min: 6, max: 50 },
+  };
+  var errors = validator.validate(rule, ctx.request.body);
+  if (errors && errors.length) {
+    ctx.status = 400;
+    ctx.body = { error: errors[0]['field'] + " " + errors[0]['message'] };
+    return;
+  }
 
+  // 检查验证码是否存在
+  var codeItem = await codeModel.findOne({
+    where: {
+      account: ctx.request.body.mobile,
+      code: ctx.request.body.code
+    }
+  });
+  var now = Math.round(Date.now());
+  if (codeItem && codeItem.flag == null && now > codeItem.expired_at) {
+    ctx.status = 200;
+    ctx.body = { code: codeItem.code };
+    return;
+  }
+
+  ctx.status = 404;
+  ctx.body = { error: i18n.__('code_is_not_exist_or_expired') };
 }

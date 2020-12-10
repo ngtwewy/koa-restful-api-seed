@@ -10,6 +10,7 @@
   "author": "ngtwewy",
   "license": "ISC",
   "dependencies": {
+    "@koa/router": "^10.0.0",
     "ejs": "^3.1.5",
     "i18n": "^0.13.2",
     "images": "^3.2.3",
@@ -22,7 +23,6 @@
     "koa-logger": "^3.2.1",
     "koa-methodoverride": "^2.0.0",
     "koa-ratelimit": "^4.2.1",
-    "koa-router": "^9.4.0",
     "koa-send": "^5.0.1",
     "koa-session": "^6.1.0",
     "koa-static": "^5.0.0",
@@ -32,6 +32,5 @@
     "nodemailer": "^6.4.14",
     "parameter": "^3.6.0",
     "sequelize": "^6.3.5"
-  },
-  "devDependencies": {}
+  }
 }

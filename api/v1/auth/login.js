@@ -4,6 +4,7 @@ var Parameter = require('parameter');
 
 var tools = require('../../../utils/tools');
 var userModel = require('../../../models/user');
+var codeModel = require('../../../models/code');
 
 var config = require("../../../config");
 
@@ -70,17 +71,16 @@ exports.login = async (ctx) => {
 * @apiParam {String} password   选填，密码，用户只能使用短信验证码登录
 * @apiParam {String} sms_code   必填，短信验证码
 */
-exports.signup = (ctx) => {
+exports.signUp = async (ctx) => {
   // 验证参数
   var validator = new Parameter();
   var rule = {
     mobile: { type: 'string', min: 11, max: 11 },
     nickname: { type: 'string', min: 2, max: 20, required: false },
     password: { type: 'string', min: 6, max: 50, required: false },
-    verification_code: { type: 'string', min: 3, max: 10 },
+    sms_code: { type: 'string', min: 3, max: 10 },
     device_type: { type: 'string', min: 1, max: 20 }
   };
-
   var errors = validator.validate(rule, ctx.request.body);
   if (errors && errors.length) {
     ctx.status = 400;
@@ -88,26 +88,61 @@ exports.signup = (ctx) => {
     return;
   }
 
-  // 1.检查，如果手机号已经注册，直接返回用户信息和token
-  // var 
+  // 检查验证码是否正确
+  var codeItem = await codeModel.findOne({
+    where: {
+      account: ctx.request.body.mobile,
+      code: ctx.request.body.sms_code
+    }
+  });
+  console.log("Math.round(Date.now() / 1000): ", Math.round(Date.now() / 1000));
+  if (
+    !codeItem //验证码不存在
+    ||
+    (codeItem.expired_at < Math.round(Date.now() / 1000)) //验证码已超时
+    ||
+    codeItem.is_used > 0 //验证码已经使用过
+  ) {
+    ctx.status = 401;
+    ctx.body = { error: i18n.__("code_is_not_exist_or_expired") };
+    return;
+  } else {
+    var data = { is_used: 1, flag: "sign-up" };
+    var where = { account: ctx.request.body.mobile, code: ctx.request.body.sms_code }
+    await codeModel.update(data, { where });
+  }
 
-  // 2. 未注册的话
-  // 创建用户数据
+  // 生成 token
+  var payload = {
+    exp: Math.floor(Date.now() / 1000) + (60 * 60), // Token Expiration (exp claim)
+    iat: Math.floor(Date.now() / 1000) - 30, // Backdate a jwt 30 seconds
+    data: 'foobar'
+  };
+  var token = jwt.sign(payload, config.jwt.secret);
+
+  // 1.手机号已经注册，直接返回用户信息和token
+  var someone = await userModel.findOne({ where: { mobile: ctx.request.body.mobile } });
+  if (someone) {
+    ctx.status = 200;
+    ctx.body = { token, isNewUser: false, user: someone };
+    return;
+  }
+
+  // 2. 未注册的话，创建用户数据
   var user = {
     mobile: ctx.request.body.mobile,
     nickname: "",
-    password: ctx.request.body.password ? ctx.request.body.password : "",
+    password: tools.md5(ctx.request.body.password),
     created_at: parseInt(Date.now() / 1000),
-    create_tim2: Date.now()
+    logined_at: parseInt(Date.now() / 1000),
   };
-  // 检查验证码是否正确
-
-  // 创建用户
-
-  // 生成 token
-
-  // 返回 token 和用户信息
-  ctx.body = user;
+  if (ctx.request.body.nickname) { //没有填写昵称，自动生成昵称
+    var fakeMobile = ctx.request.body.mobile;
+    user.nickname = fakeMobile.slice(0, 3) + '****' + fakeMobile.slice(fakeMobile.length - 4);
+  }
+  var userItem = await userModel.create(user);
+  console.log("userItem: ", userItem);
+  ctx.body = { token, isNewUser: true, user: userItem };
 }
 
 

@@ -76,7 +76,7 @@ exports.getImageUrl = function (url) {
   if (url) {
     return "/uploads/images/" + url;
   } else {
-    return "/images/no-thumbnail.png";
+    return "/assets/common/images/no-thumbnail.png";
   }
 }
 

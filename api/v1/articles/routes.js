@@ -1,4 +1,4 @@
-const Router = require('koa-router');
+const Router = require('@koa/router');
 const articleService = require('./articles.js');
 
 const router = new Router({

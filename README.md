@@ -13,7 +13,9 @@
 ├── app              # 前后端不分离目录
 │   ├── controllers  # 控制器目录
 │   ├── services     # 服务目录
-│   └── views        # ejs 模板目录
+│   ├── views        # ejs 模板目录
+│   ├── config       # 配置文件
+│   └── index.js     # 路由文件
 ├── bin              # 控制台程序
 ├── config           # 配置文件目录
 ├── docs             # 文档目录
@@ -34,7 +36,7 @@
 
 ```
 cd bin
-apidoc -i ../api/ -o ../static/manual/
+apidoc -i ../api/ -o ../static/documents/
 ```
 ## 代码规范
 - [CodeGuideline](docs/CodeGuideline.md)

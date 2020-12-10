@@ -1,10 +1,12 @@
 const Router = require('@koa/router');
 
-// const { auth, authz, cache } = require('../../../middleware');
+const login = require('./user');
 
 const router = new Router({
-  prefix: '/home',
+  prefix: '/users',
 });
 
+router.post(`/:id`, login.show);
 
 module.exports = router;
+

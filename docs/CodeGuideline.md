@@ -11,7 +11,7 @@
 ## 2， RESTful API 推荐
 方法         路由                    控制器或服务        含义
 GET         /articles              articles.index     # 查看文章列表
-POST        /articles              articles.create    # 添加保存
+POST        /articles              articles.store     # 添加保存
 PUT         /articles/:id          articles.update    # 编辑保存
 DELETE      /articles/:id          articles.destroy   # 删除一个
 GET         /articles/:id          articles.show      # 查看详情
@@ -31,14 +31,14 @@ GET         /articles/:id          articles.show      # 查看详情
 
 ## 4 前后端不分离
 如果是前后端不分离，比RESTful API 增加了 “打开添加页面” 和 “打开编辑页面”。
-方法         路由                   控制器或服务         含义
-GET         /articles              articles.index     # 查看文章列表
-GET         /articles/create       articles.create    # 打开新建页面 ***
-POST        /articles              articles.store     # 新建保存
-GET         /articles/:id/edit     articles.edit      # 打开编辑页面 ***
-GET         /articles/:id          articles.show      # 查看一个
-PUT/PATCH   /articles/:id          articles.update    # 编辑保存
-DELETE      /articles/:id          articles.destroy   # 删除一个
+方法             路由                   控制器或服务         含义
+GET             /articles              articles.index     # 查看文章列表
+GET             /articles/create       articles.create    # 打开新建页面 ***
+POST            /articles              articles.store     # 新建保存
+GET             /articles/:id/edit     articles.edit      # 打开编辑页面 ***
+PUT/PATCH/POST  /articles/:id          articles.update    # 编辑保存
+DELETE          /articles/:id          articles.destroy   # 删除一个
+GET             /articles/:id          articles.show      # 查看一个
 
 如果我们不需要其中的某几个方法，可以不用在 articles.js 里面实现。
 

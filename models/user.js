@@ -3,7 +3,7 @@ var db = require('./db');
 
 var User = db.define('tb_user',
   {
-    id: { type: Sequelize.STRING, allowNull: false, primaryKey: true },
+    id: { type: Sequelize.STRING, allowNull: false, primaryKey: true, autoIncrement: true },
     username: Sequelize.STRING(100),
     nickname: Sequelize.STRING(100),
     email: Sequelize.STRING(100),
@@ -21,6 +21,7 @@ var User = db.define('tb_user',
     more: Sequelize.TEXT,
     address: Sequelize.STRING(255),
     type: Sequelize.INTEGER,
+    uuid: Sequelize.STRING(128),
     created_at: Sequelize.BIGINT(11),
     logined_at: Sequelize.BIGINT(11),
     updated_at: Sequelize.BIGINT(11),

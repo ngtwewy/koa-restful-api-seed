@@ -1,6 +1,5 @@
 async function auth(ctx, next) {
-  if (!ctx.session.user) {
-    ctx.redirect('/login');
+  if (token) {
     return;
   }
   await next();

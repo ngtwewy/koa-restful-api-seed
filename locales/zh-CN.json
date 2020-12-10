@@ -17,5 +17,7 @@
   "sms_sending_failed":"短信发送失败",
   "mail_sending_success":"邮件发送成功",
   "sms_sending_success":"短信发送成功",
-  "exceeding_the_speed_limit":"短信发送次数超过限制，请稍后再试"
+  "exceeding_the_speed_limit":"短信发送次数超过限制，请稍后再试",
+  "code_is_not_exist_or_expired":"验证码不存在或已过期",
+  "mobile_has_been_registered":"手机号已经被注册"
 }
