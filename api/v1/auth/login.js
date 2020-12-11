@@ -8,6 +8,7 @@ var codeModel = require('../../../models/code');
 
 var config = require("../../../config");
 
+var userFields = ['nickname', 'mobile', 'gender', 'birthday', 'avatar', 'signature', 'address', 'uuid', 'type'];
 
 /**
 * @api {post} /api/login 登录接口
@@ -35,7 +36,10 @@ exports.login = async (ctx) => {
   var where = {};
   where.mobile = ctx.request.body.mobile;
   where.password = tools.md5(ctx.request.body.password);
-  var users = await userModel.findAll({ where });
+  var users = await userModel.findAll({
+    attributes: userFields,
+    where
+  });
 
   if (!users.length) {
     ctx.status = 400;
@@ -107,7 +111,10 @@ exports.signUp = async (ctx) => {
 
 
   // 1.手机号已经注册，直接返回用户信息和token
-  var someone = await userModel.findOne({ where: { mobile: ctx.request.body.mobile } });
+  var someone = await userModel.findOne({
+    attributes: userFields,
+    where: { mobile: ctx.request.body.mobile }
+  });
   if (someone) {
     var token = createToken(someone.uuid);
     ctx.status = 200;
@@ -124,14 +131,25 @@ exports.signUp = async (ctx) => {
     created_at: parseInt(Date.now() / 1000),
     logined_at: parseInt(Date.now() / 1000),
   };
-  if (ctx.request.body.nickname) { //没有填写昵称，自动生成昵称
+  //没有填写昵称，自动生成昵称
+  if (ctx.request.body.nickname) {
     var fakeMobile = ctx.request.body.mobile;
     user.nickname = fakeMobile.slice(0, 3) + '****' + fakeMobile.slice(fakeMobile.length - 4);
   }
-  var userItem = await userModel.create(user);
-  console.log("userItem: ", userItem);
-  var token = createToken(userItem.uuid);
-  ctx.body = { token, isNewUser: true, user: userItem };
+  // 删除用户敏感信息
+  try {
+    var userItem = await userModel.create(user);
+    var responseData = await userModel.findOne({
+      attributes: userFields,
+      where: { id: userItem.id }
+    });
+    var token = createToken(userItem.uuid);
+    ctx.body = { token, isNewUser: true, user: responseData };
+    return;
+  } catch (error) {
+    ctx.status = 500;
+    ctx.body = { error: i18n.__("500") + ", " + error };
+  }
 }
 
 
