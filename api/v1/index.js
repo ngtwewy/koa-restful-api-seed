@@ -24,7 +24,6 @@ const v1 = new Router({
  *   "document_url": "https://restfulapi.cn/manual"
  * }
  * 
- * 
  */
 v1.get(`/`, (ctx) => {
   var data = config.systemInfo;
@@ -34,6 +33,10 @@ v1.get(`/`, (ctx) => {
 
 v1.use(auth.routes());
 v1.use(home.routes());
+
+const authMiddleware = require("../../middleware/auth");
+v1.use(authMiddleware);
+
 v1.use(articles.routes());
 
 module.exports = v1;

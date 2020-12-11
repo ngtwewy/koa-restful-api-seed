@@ -32,7 +32,7 @@ exports.list = async (ctx, next) => {
   var data = {};
 
   let page = ctx.request.query.page ? parseInt(ctx.request.query.page) : 1; // 页码
-  let perPage = ctx.request.query.per_page ? parseInt(ctx.request.query.per_page) : 30; // 每页条
+  let perPage = ctx.request.query.per_page ? parseInt(ctx.request.query.per_page) : 10; // 每页条
   let start = perPage * (page - 1);
   let categoryId = ctx.request.query.category_id ? parseInt(ctx.request.query.category_id) : 0; // 分类ID
   let sortby = ctx.request.query.sortby ? ctx.request.query.sortby : 'id'; // 排序字段

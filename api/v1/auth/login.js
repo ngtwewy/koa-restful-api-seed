@@ -43,13 +43,7 @@ exports.login = async (ctx) => {
     return;
   }
 
-  // 生成 token
-  var payload = {
-    exp: Math.floor(Date.now() / 1000) + (60 * 60), // Token Expiration (exp claim)
-    iat: Math.floor(Date.now() / 1000) - 30, // Backdate a jwt 30 seconds
-    data: 'foobar'
-  };
-  var token = jwt.sign(payload, config.jwt.secret);
+  var token = createToken(users[0].uuid);
 
   ctx.status = 200;
   ctx.body = { token, user: users[0] };
@@ -78,8 +72,7 @@ exports.signUp = async (ctx) => {
     mobile: { type: 'string', min: 11, max: 11 },
     nickname: { type: 'string', min: 2, max: 20, required: false },
     password: { type: 'string', min: 6, max: 50, required: false },
-    sms_code: { type: 'string', min: 3, max: 10 },
-    device_type: { type: 'string', min: 1, max: 20 }
+    sms_code: { type: 'string', min: 3, max: 10 }
   };
   var errors = validator.validate(rule, ctx.request.body);
   if (errors && errors.length) {
@@ -112,17 +105,11 @@ exports.signUp = async (ctx) => {
     await codeModel.update(data, { where });
   }
 
-  // 生成 token
-  var payload = {
-    exp: Math.floor(Date.now() / 1000) + (60 * 60), // Token Expiration (exp claim)
-    iat: Math.floor(Date.now() / 1000) - 30, // Backdate a jwt 30 seconds
-    data: 'foobar'
-  };
-  var token = jwt.sign(payload, config.jwt.secret);
 
   // 1.手机号已经注册，直接返回用户信息和token
   var someone = await userModel.findOne({ where: { mobile: ctx.request.body.mobile } });
   if (someone) {
+    var token = createToken(someone.uuid);
     ctx.status = 200;
     ctx.body = { token, isNewUser: false, user: someone };
     return;
@@ -133,6 +120,7 @@ exports.signUp = async (ctx) => {
     mobile: ctx.request.body.mobile,
     nickname: "",
     password: tools.md5(ctx.request.body.password),
+    uuid: tools.uuid(),
     created_at: parseInt(Date.now() / 1000),
     logined_at: parseInt(Date.now() / 1000),
   };
@@ -142,7 +130,23 @@ exports.signUp = async (ctx) => {
   }
   var userItem = await userModel.create(user);
   console.log("userItem: ", userItem);
+  var token = createToken(userItem.uuid);
   ctx.body = { token, isNewUser: true, user: userItem };
 }
 
 
+
+/**
+ * 生成 JWT Token
+ * @param {object} user 用户对象，包含 id
+ */
+function createToken(uuid) {
+  // 生成 token
+  var payload = {
+    exp: Math.floor(Date.now() / 1000) + (60 * 60), // Token Expiration (exp claim)
+    iat: Math.floor(Date.now() / 1000) - 30, // Backdate a jwt 30 seconds
+    data: { uuid }
+  };
+  var token = jwt.sign(payload, config.jwt.secret);
+  return token;
+}
