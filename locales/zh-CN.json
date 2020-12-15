@@ -32,5 +32,6 @@
   "exceeding_the_speed_limit":"短信发送次数超过限制，请稍后再试",
   "code_is_not_exist_or_expired":"验证码不存在或已过期",
   "mobile_has_been_registered":"手机号已经被注册",
-  "authorization_is_not_exist":"缺少 JWT 字段"
+  "authorization_is_not_exist":"缺少 JWT 字段",
+  "upload_success":"文件上传成功"
 }

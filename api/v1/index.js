@@ -38,5 +38,6 @@ const authMiddleware = require("../../middleware/auth");
 v1.use(authMiddleware);
 
 v1.use(articles.routes());
+v1.use(require("./users/routes").routes());
 
 module.exports = v1;

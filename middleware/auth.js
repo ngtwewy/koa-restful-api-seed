@@ -16,7 +16,7 @@ async function auth(ctx, next) {
     var decoded = jwt.verify(token, config.jwt.secret);
     var uuid = decoded.data.uuid;
     // 在这里可以检查该uuid的用户权限，比如是否已经被拉黑
-    var user = userModel.findOne({ where: { uuid } });
+    var user = await userModel.findOne({ where: { uuid } });
     if (user.status != 1) {
       ctx.status = 403;
       ctx.body = { error: i18n.__('403') };

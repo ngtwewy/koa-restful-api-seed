@@ -124,6 +124,23 @@ exports.createFolder = function (folder) {
   }
 };
 
+// Stream Pipe 复制文件
+exports.pipe = function (dst, target) {
+  var reader = fs.createReadStream(dst);
+  var writer = fs.createWriteStream(target);
+  reader = reader.pipe(writer);
+
+  var promise = new Promise(function (resolve, reject) {
+    reader.on('error', function (err) {
+      reject(err)
+    });
+    reader.on('close', function () {
+      resolve(reader);
+    });
+  });
+  return promise;
+}
+
 
 /**
  * uuid 生成函数
