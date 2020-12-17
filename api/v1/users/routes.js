@@ -1,6 +1,6 @@
 const Router = require('@koa/router');
 
-const login = require('./users');
+const users = require('./users');
 const avatar = require('./avatar');
 
 const router = new Router({
@@ -10,7 +10,8 @@ const router = new Router({
 
 router.post(`/avatar`, avatar.store);
 
-router.post(`/:id`, login.show);
+router.get(`/:uuid`, users.show);
+router.post(`/:uuid`, users.update);
 
 module.exports = router;
 

@@ -14,8 +14,8 @@ const v1 = new Router({
  * 
  * @api {get} / 获取接口信息
  * @apiName 获取接口信息
- * @apiGroup group
- * @apiVersion  3.1.0
+ * @apiGroup 基本接口
+ * @apiVersion  1.0.0
  * 
  * @apiSuccessExample {type} Success-Response:
  * {

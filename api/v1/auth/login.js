@@ -8,8 +8,6 @@ var codeModel = require('../../../models/code');
 
 var config = require("../../../config");
 
-var userFields = ['nickname', 'mobile', 'gender', 'birthday', 'avatar', 'signature', 'address', 'uuid', 'type'];
-
 /**
 * @api {post} /api/login 登录接口
 * @apiVersion 3.1.0
@@ -37,7 +35,7 @@ exports.login = async (ctx) => {
   where.mobile = ctx.request.body.mobile;
   where.password = tools.md5(ctx.request.body.password);
   var users = await userModel.findAll({
-    attributes: userFields,
+    attributes: config.userFields,
     where
   });
 
@@ -112,7 +110,7 @@ exports.signUp = async (ctx) => {
 
   // 1.手机号已经注册，直接返回用户信息和token
   var someone = await userModel.findOne({
-    attributes: userFields,
+    attributes: config.userFields,
     where: { mobile: ctx.request.body.mobile }
   });
   if (someone) {
@@ -140,7 +138,7 @@ exports.signUp = async (ctx) => {
   try {
     var userItem = await userModel.create(user);
     var responseData = await userModel.findOne({
-      attributes: userFields,
+      attributes: config.userFields,
       where: { id: userItem.id }
     });
     var token = createToken(userItem.uuid);
@@ -161,7 +159,7 @@ exports.signUp = async (ctx) => {
 function createToken(uuid) {
   // 生成 token
   var payload = {
-    exp: Math.floor(Date.now() / 1000) + (60 * 60), // Token Expiration (exp claim)
+    exp: Math.floor(Date.now() / 1000) + (3 * 60 * 60), // Token Expiration (exp claim)
     iat: Math.floor(Date.now() / 1000) - 30, // Backdate a jwt 30 seconds
     data: { uuid }
   };

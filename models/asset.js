@@ -9,7 +9,7 @@ var code = db.define('tb_asset',
       primaryKey: true,
       autoIncrement: true
     },
-    user_id: { type: Sequelize.BIGINT(20), comment: "用户id" },
+    uuid: { type: Sequelize.STRING(150), comment: "用户uuid" },
     parent_id: { type: Sequelize.BIGINT(20), comment: "父id，比如相关文章的图片，非必填" },
     file_size: { type: Sequelize.BIGINT(20), comment: "文件大小,单位B" },
     status: {

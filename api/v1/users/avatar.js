@@ -58,8 +58,8 @@ exports.store = async (ctx) => {
 
     // 6, 修改文件尺寸
     var img = await images(destPath + '/' + destFilename);
-    img = await img.size(300);
-    await img.save(destPath + '/' + destFilename);
+    img = await img.resize(500);
+    await img.save(destPath + '/' + destFilename, { quality: 90 });
 
     // 7, 添加到数据库
     var data = {};
@@ -67,6 +67,7 @@ exports.store = async (ctx) => {
     data.file_path = '/uploads/images/' + destDir + "/" + destFilename;
     data.created_at = Math.round(Date.now() / 1000);
     data.suffix = extName;
+    data.uuid = ctx.state.uuid;
     var asset = await assetModel.create(data);
     if (!asset) {
       ctx.throw(500, "添加错误");

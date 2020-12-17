@@ -14,9 +14,9 @@ async function auth(ctx, next) {
   // invalid token - synchronous
   try {
     var decoded = jwt.verify(token, config.jwt.secret);
-    var uuid = decoded.data.uuid;
+    ctx.state.uuid = decoded.data.uuid;
     // 在这里可以检查该uuid的用户权限，比如是否已经被拉黑
-    var user = await userModel.findOne({ where: { uuid } });
+    var user = await userModel.findOne({ where: { uuid: ctx.state.uuid } });
     if (user.status != 1) {
       ctx.status = 403;
       ctx.body = { error: i18n.__('403') };
@@ -24,7 +24,7 @@ async function auth(ctx, next) {
     }
   } catch (err) {
     ctx.status = 401;
-    ctx.body = { error: i18n.__('401') + ", " + err };
+    ctx.body = { error: i18n.__('401') + ", 6666 " + err };
     return;
   }
 
